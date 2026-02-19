@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Article</title>
+
+  <link rel="stylesheet" href="css/style2.css">
+  <link rel="stylesheet" href="css/style1.css">
+
+  <style>
+    .comments-summary-layout {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+    }
+
+    .comments-section {
+      flex: 0 0 60%;
+    }
+
+    .summary-section {
+      flex: 0 0 40%;
+    }
+
+    .cluster-box {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .cluster-box:hover {
+      transform: translateY(-3px);
+    }
+
+    .cluster-box h4 {
+      font-size: 1rem;
+      color: #00c6ff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cluster-percentage {
+      background: #00c6ff;
+      color: black;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    @media (max-width: 900px) {
+      .comments-summary-layout {
+        flex-direction: column;
+      }
+
+      .comments-section,
+      .summary-section {
+        flex: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="logo">📰 Newsroom AI</div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="articles.html">Articles</a>
+      <a href="analytics.html">Analytics</a>
+    </div>
+  </nav>
+
+  <main class="analytics-container">
+
+    <!-- ARTICLE -->
+    <section class="glass article-section">
+      <h1 id="article-title">Loading...</h1>
+      <div id="article-content"></div>
+    </section>
+
+    <div class="comments-summary-layout">
+
+      <!-- COMMENTS -->
+      <section class="glass comments-section">
+        <h2>Public Comments</h2>
+
+        <input type="text" id="username" placeholder="Your name" />
+        <textarea id="comment-input" placeholder="Write your comment..."></textarea>
+
+        <button class="action-btn" onclick="postComment()">Post Comment</button>
+
+        <div id="comments-list"></div>
+      </section>
+
+      <!-- CLUSTERS -->
+      <section class="glass summary-section">
+        <h2>AI Comment Clusters</h2>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <button class="action-btn small" onclick="loadClusters()">View Summary</button>
+          <a id="analytics-btn" class="action-btn small" href="#"
+            style="background:#ef4444; color:white; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; height: 32px; padding: 0 16px;">Analytics
+            📊</a>
+        </div>
+        <div id="clusters-container" style="margin-top:15px;"></div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const articleId = params.get("id");
+
+    if (!articleId) {
+      console.error("Article ID missing in URL");
+    }
+
+    /* =========================
+       LOAD ARTICLE
+    ========================= */
+
+    fetch(`http://127.0.0.1:8000/articles/${articleId}`)
+      .then(res => res.json())
+      .then(article => {
+        document.getElementById("article-title").innerText = article.title;
+
+        const contentDiv = document.getElementById("article-content");
+        contentDiv.innerHTML = "";
+
+        if (article.content) {
+          const p = document.createElement("p");
+          p.textContent = article.content;
+          contentDiv.appendChild(p);
+        }
+
+        if (article.url) {
+          const link = document.createElement("a");
+          link.href = article.url;
+          link.target = "_blank";
+          link.innerText = "Read full article on source website →";
+          link.style.display = "block";
+          link.style.marginTop = "20px";
+          link.style.marginTop = "20px";
+          contentDiv.appendChild(link);
+        }
+
+        // Update Analytics Button Link
+        document.getElementById("analytics-btn").href = `analytics.html?article_id=${articleId}`;
+      });
+
+    /* =========================
+       LOAD COMMENTS
+    ========================= */
+
+    function loadComments() {
+      fetch(`http://127.0.0.1:8000/articles/${articleId}/comments`)
+        .then(res => res.json())
+        .then(comments => {
+          const list = document.getElementById("comments-list");
+          list.innerHTML = "";
+
+          if (!comments || comments.length === 0) {
+            list.innerHTML = "<p style='opacity:0.6;'>No comments yet.</p>";
+            return;
+          }
+
+          comments.forEach(c => {
+            const div = document.createElement("div");
+            div.className = "user-comment";
+            div.textContent = c.text;
+            list.appendChild(div);
+          });
+        })
+        .catch(err => {
+          console.error("Failed to load comments", err);
+        });
+    }
+
+    loadComments();
+
+    /* =========================
+       POST COMMENT
+    ========================= */
+
+    function postComment() {
+      const name = document.getElementById("username").value.trim();
+      const text = document.getElementById("comment-input").value.trim();
+
+      if (!name || !text) {
+        alert("Enter name and comment");
+        return;
+      }
+
+      const finalText = `${name}: ${text}`;
+
+      fetch(`http://127.0.0.1:8000/articles/${articleId}/comments`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: finalText })
+      })
+        .then(() => {
+          document.getElementById("comment-input").value = "";
+          loadComments();
+        })
+        .catch(err => {
+          console.error("Failed to post comment", err);
+        });
+    }
+
+    /* =========================
+       LOAD CLUSTERS
+    ========================= */
+
+    function loadClusters() {
+      const container = document.getElementById("clusters-container");
+      container.innerHTML = "Analyzing comments...";
+
+      fetch(`http://127.0.0.1:8000/articles/${articleId}/clusters`)
+        .then(res => res.json())
+        .then(data => {
+
+          if (data.error) {
+            container.innerHTML = data.error;
+            return;
+          }
+
+          data.sort((a, b) => b.percentage - a.percentage);
+
+          container.innerHTML = "";
+
+          data.forEach(cluster => {
+            const box = document.createElement("div");
+            box.className = "cluster-box";
+
+            const headlineRow = document.createElement("h4");
+            headlineRow.innerHTML = `
+            ${cluster.headline}
+            <span class="cluster-percentage">${cluster.percentage}%</span>
+          `;
+
+            box.appendChild(headlineRow);
+            container.appendChild(box);
+          });
+        })
+        .catch(err => {
+          container.innerHTML = "Failed to load clusters.";
+          console.error(err);
+        });
+    }
+
+  </script>
+
+</body>
+
+</html>

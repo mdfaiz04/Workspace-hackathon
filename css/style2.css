@@ -1,0 +1,252 @@
+/* =========================
+   DESIGN SYSTEM
+========================= */
+:root {
+  --accent: #f4b41a;
+  --accent-soft: rgba(244, 180, 26, 0.25);
+  --bg-dark: #ffffff;
+  --glass: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.15);
+  --text-muted: rgba(255, 255, 255, 0.75);
+
+  --primary-blue: #000000;
+  --primary-blue-dark: #000000;
+  --neutral-dark: #111827;
+  --input-bg: #f3f4f6;
+  --input-border: #d1d5db;
+  --input-text: #111827;
+  --placeholder: #6b7280;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: radial-gradient(circle at top, #0b1224, var(--bg-dark));
+  color: rgb(0, 0, 0);
+  overflow-x: hidden;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+.analytics-container {
+  max-width: 1200px;
+  margin: 100px auto;
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+/* =========================
+   GLASS CARD
+========================= */
+.glass {
+  padding: 42px;
+  background: var(--glass);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transform: translateY(50px);
+  animation: reveal 1.2s ease forwards;
+}
+
+@keyframes reveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   ARTICLE
+========================= */
+.article-section h1 {
+  font-size: 2.6rem;
+  margin-bottom: 22px;
+  color: #000000;
+  font-weight: 700;
+}
+
+.article-section p {
+  line-height: 1.9;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
+
+/* =========================
+   COMMENTS INPUTS
+========================= */
+.comments-section input,
+.comments-section textarea {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--input-border);
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  font-size: 0.95rem;
+  transition: border 0.25s ease, box-shadow 0.25s ease;
+}
+
+.comments-section textarea {
+  height: 150px;
+}
+
+.comments-section textarea::placeholder,
+.comments-section input::placeholder {
+  color: var(--placeholder);
+}
+
+.comments-section input:focus,
+.comments-section textarea:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 2px rgb(255, 255, 255);
+}
+
+/* =========================
+   COMMENTS LIST
+========================= */
+#comments-list {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.user-comment {
+  padding: 16px 18px;
+  background: rgb(255, 255, 255);
+  border-left: 4px solid var(--primary-blue);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgb(122, 108, 108);
+  transition: background 0.2s ease;
+}
+
+.user-comment:hover {
+  background: rgb(236, 236, 236);
+}
+
+/* =========================
+   CLUSTERS
+========================= */
+#clusters-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cluster-box {
+  background: rgba(169, 153, 153, 0.859);
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cluster-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(130, 122, 122, 0.868);
+}
+
+.cluster-box h4 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+  color: var(--primary-blue);
+  margin-bottom: 8px;
+}
+
+.cluster-percentage {
+  background: var(--primary-blue);
+  color: #fffdfd;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+/* Post Comment */
+.comments-section .action-btn {
+  margin-top: 20px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: none;
+  background-color: var(--primary-blue);
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.comments-section .action-btn:hover {
+  background-color: var(--primary-blue-dark);
+  box-shadow: 0 6px 16px rgb(255, 255, 255);
+}
+
+/* View Summary */
+.summary-section .action-btn {
+  margin-top: 16px;
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: none;
+  background-color: var(--neutral-dark);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.summary-section .action-btn:hover {
+  background-color: #000000;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================
+   NAVBAR
+========================= */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 14px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(14px);
+  background: rgba(15, 23, 42, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .analytics-container {
+    padding: 0 24px;
+  }
+
+  .article-section h1 {
+    font-size: 2.1rem;
+  }
+}

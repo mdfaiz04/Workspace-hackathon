@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Intelligence Analytics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Chart.js & helpers -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- html2canvas for capturing dashboard area -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- jsPDF for PDF export, FileSaver for downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+  <link rel="stylesheet" href="css/analytics.css" />
+</head>
+
+<body>
+
+  <!-- NAVBAR (unchanged) -->
+  <nav class="navbar">
+    <div class="logo">📰 Newsroom AI</div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="articles.html">Articles</a>
+      <a href="analytics.html" class="active">Analytics</a>
+    </div>
+  </nav>
+
+  <main class="dashboard">
+
+    <!-- AI INTELLIGENCE HEADER -->
+    <section class="ai-header glass">
+      <div class="title-row">
+        <h1>AI Intelligence Analytics</h1>
+        <span class="status-indicator">
+          <span class="dot"></span> AI Active
+        </span>
+      </div>
+      <div class="meta-chips">
+        <span class="chip" id="meta-source">Source: -</span>
+        <span class="chip" id="meta-category">Category: -</span>
+        <span class="chip" id="meta-pubtime">Published: -</span>
+        <span class="chip" id="meta-comments">Comments: -</span>
+      </div>
+      <div class="export-buttons">
+        <button id="export-pdf">Export PDF</button>
+        <button id="export-json">Download JSON</button>
+        <button id="export-csv">Download CSV</button>
+      </div>
+    </section>
+
+    <!-- SMART KPI CARDS -->
+    <section class="kpi-row smart-cards" id="kpi-cards">
+      <!-- cards will be populated dynamically by analytics.js -->
+    </section>
+
+    <!-- CHART GRID -->
+    <section class="analysis-grid">
+
+      <div class="panel" id="ai-theme-explorer">
+        <h2>AI Theme Explorer</h2>
+        <canvas id="topicChart"></canvas>
+      </div>
+
+      <div class="panel" id="sentiment-dist-panel">
+        <h2>Sentiment Distribution</h2>
+        <canvas id="sentimentChart"></canvas>
+      </div>
+
+      <div class="panel" id="trend-panel" style="grid-column: span 2;">
+        <h2>Sentiment Trend</h2>
+        <canvas id="trendChart"></canvas>
+      </div>
+
+    </section>
+
+    <!-- AI INSIGHTS SECTION -->
+    <section class="insights-grid">
+      <div class="panel heatmap-panel">
+        <h2>Sentiment Heatmap</h2>
+        <canvas id="heatmapChart"></canvas>
+      </div>
+      <div class="panel timeline-panel">
+        <h2>Topic Evolution</h2>
+        <canvas id="timelineChart"></canvas>
+      </div>
+      <div class="panel public-opinion-panel">
+        <h2>AI Public Opinion</h2>
+        <p id="ai-summary">Loading AI summary...</p>
+      </div>
+    </section>
+
+
+    <!-- AI SAFETY MONITOR -->
+    <section class="panel safety-panel">
+      <h2>AI Safety Monitor</h2>
+      <div id="safety-status">
+        <!-- toxicity, hate, spam badges injected by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/analytics.js"></script>
+</body>
+
+</html>
