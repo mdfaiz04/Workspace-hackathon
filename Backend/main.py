@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from datetime import datetime
 
 from Backend.clustering import cluster_comments, generate_cluster_headline
@@ -7,6 +9,11 @@ from Backend.db import articles_col, comments_col
 from Backend.news_fetcher import fetch_and_store_articles
 
 app = FastAPI()
+
+# ---------------- STATIC & TEMPLATES ----------------
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 # ---------------- CORS ----------------
 
@@ -27,19 +34,32 @@ def startup_event():
     print("✅ Startup pipeline complete")
 
 
-# ---------------- ROOT ----------------
+# ---------------- PAGE ROUTES ----------------
 
 @app.get("/")
-def root():
-    return {"message": "VISAI Backend is running successfully 🚀"}
+def root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
-
-# ---------------- ARTICLES ----------------
 
 @app.get("/articles")
-def get_articles():
+def get_articles_page(request: Request):
+    # To maintain existing API functionality while serving the template
+    if "text/html" in request.headers.get("accept", ""):
+        return templates.TemplateResponse("articles.html", {"request": request})
     return list(articles_col.find({}, {"_id": 0}))
 
+
+@app.get("/article")
+def get_article_page(request: Request):
+    return templates.TemplateResponse("article.html", {"request": request})
+
+
+@app.get("/analytics")
+def get_analytics_page(request: Request):
+    return templates.TemplateResponse("analytics.html", {"request": request})
+
+
+# ---------------- ARTICLES API ----------------
 
 @app.get("/articles/{article_id}")
 def get_article(article_id: str):
@@ -49,7 +69,7 @@ def get_article(article_id: str):
     return article
 
 
-# ---------------- COMMENTS ----------------
+# ---------------- COMMENTS API ----------------
 
 @app.get("/articles/{article_id}/comments")
 def get_comments(article_id: str):
@@ -76,7 +96,7 @@ def add_comment(article_id: str, comment: dict):
     return {"message": "Comment added successfully"}
 
 
-# ---------------- AI CLUSTERS ----------------
+# ---------------- AI CLUSTERS API ----------------
 
 @app.get("/articles/{article_id}/clusters")
 def get_clusters(article_id: str):

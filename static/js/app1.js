@@ -1,10 +1,10 @@
 
 function goArticles() {
-  window.location.href = "articles.html";
+  window.location.href = "/articles";
 }
 
 function goAnalytics() {
-  window.location.href = "analytics.html";
+  window.location.href = "/analytics";
 }
 
 // ---------- NEW: Backend Article Loading ----------
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll(".read-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const id = btn.getAttribute("data-id");
-          window.location.href = `article.html?id=${id}`;
+          window.location.href = `/article?id=${id}`;
         });
       });
     })
